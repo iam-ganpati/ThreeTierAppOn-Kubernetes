@@ -1,1 +1,0 @@
-# ThreeTierAppOn-Kubernetes
