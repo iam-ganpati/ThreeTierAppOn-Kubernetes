@@ -117,6 +117,11 @@ kubectl get nodes
 once above command will execute you will see the to ec2 instance or node has been created. (t2.medium)
 you can check the created cluster on AWS console also you and can check on Cloud Formation as well.
 
+![image](https://github.com/iam-ganpati/ThreeTierAppOn-Kubernetes/assets/154478305/72bf5a83-543c-4587-bfea-c375caa44d1d)
+
+![image](https://github.com/iam-ganpati/ThreeTierAppOn-Kubernetes/assets/154478305/ed3067ce-0b5d-480b-a2dc-e8c544a0166f)
+
+
 ### Step 8: Create and Run Manifests.
 - for Mongodb
 - ```kubectl create namespace workshop```
@@ -159,6 +164,7 @@ kubectl apply -f service.yaml
 ```
 eksctl create iamserviceaccount --cluster=three-tier-cluster --namespace=kube-system --name=aws-load-balancer-controller --role-name AmazonEKSLoadBalancerControllerRole --attach-policy-arn=arn:aws:iam::806956591980:policy/AWSLoadBalancerControllerIAMPolicy --approve --region=us-east-1
 ```
+![image](https://github.com/iam-ganpati/ThreeTierAppOn-Kubernetes/assets/154478305/4036e6c1-edf7-49ab-a1d7-28b50a9f5cf5)
 
 
 ### Step 10: Deploy AWS Load Balancer Controller
@@ -170,6 +176,11 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n ku
 kubectl get deployment -n kube-system aws-load-balancer-controller
 kubectl apply -f ingress.yaml
 ```
+
+### Now you can access the application with the LB URL.
+
+![image](https://github.com/iam-ganpati/ThreeTierAppOn-Kubernetes/assets/154478305/116e25ec-5739-4875-bf08-80c67d54deb2)
+
 
 ### Check Successfull Deployment
 
@@ -214,4 +225,54 @@ ubuntu@ip-172-31-23-184:~/TWSThreeTierAppChallenge/Kubernetes-Manifests-file$
 eksctl delete cluster --name three-tier-cluster --region us-west-2
 ```
 
+## Acknowledgments
 
+I would like to thank ```LondheShubham153``` for their excellent tutorial on creating and deploying a three-tier web application. Their video provided invaluable guidance and inspiration for this project.
+
+## Conclusion
+
+This project showcases the integration of a modern web application stack with cloud-native deployment practices. By leveraging Kubernetes on AWS EKS, the application achieves scalability, resilience, and ease of management.
+
+```
+                           +-------------+
+                           |    Users    |
+                           +------+------+
+                                  |
+                                  v
+                           +-------------+
+                           |   AWS ALB   |
+                           +------+------+
+                                  |
+                                  v
+                           +-------------+
+                           |   Ingress   |
+                           +------+------+
+                                  |
+                                  v
+                     +-----------------------+
+                     | Ingress Controller    |
+                     +------+----------------+
+                            |
+          +-----------------+----------------+
+          |                 |                |
+          v                 v                v
++----------------+  +----------------+  +----------------+
+| Frontend       |  | Backend        |  | Database       |
+| Service        |  | Service        |  | Service        |
++--------+-------+  +--------+-------+  +--------+-------+
+         |                 |                |
+         v                 v                v
++----------------+  +----------------+  +----------------+
+| Frontend Pods  |  | Backend Pods   |  | Database Pods  |
++----------------+  +----------------+  +----------------+
+         ^                 ^                ^
+         |                 |                |
+         +-----------------+----------------+
+                            |
+                            v
+                  +----------------------+
+                  | Persistent Volumes   |
+                  | and Claims           |
+                  +----------------------+
+
+```
